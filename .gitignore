@@ -581,3 +581,6 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp
+
+
+git rm --cached bin/Release/net10.0-windows/win-x64/publish/MonitorAudioSwitcher.exe
