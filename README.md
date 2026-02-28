@@ -4,8 +4,6 @@
 
 Automatic audio switching for Windows based on the active monitor.
 
-Switches default audio device depending on which monitor is active.
-
 
 
 \## How to use
@@ -16,15 +14,17 @@ Switches default audio device depending on which monitor is active.
 
 3\. Select your monitors and corresponding audio devices.
 
-4\. Click "Start" to enable automatic switching.
+4\. Click "Start auto audio" to enable automatic switching.
 
 
 
-\## Future improvements
+\## TO DO
 
-1. Improve Display naming
-2. Make it more user friendly
-3. Detect monitor changes automatically
+
+
+Allow different applications to reproduce audio on separate devices
+
+Improve display naming
 
 
 

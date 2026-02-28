@@ -12,7 +12,7 @@ namespace MonitorAudioSwitcher
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            Application.Run(new Form1()); // usa Form1 che hai
+            Application.Run(new Form1()); 
         }
     }
 }
