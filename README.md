@@ -6,15 +6,6 @@ Automatically switch your Windows audio output device based on the active monito
 
 
 
-!\[Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
-
-!\[.NET](https://img.shields.io/badge/.NET-10.0-purple)
-
-!\[Language](https://img.shields.io/badge/language-C%23-green)
-
-!\[License](https://img.shields.io/badge/license-MIT-orange)
-
-
 
 ---
 
@@ -162,7 +153,7 @@ If you find this project useful and want to support its development:
 
 
 
-\[!\[Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge\&logo=paypal\&logoColor=white)](https://www.paypal.com/donate/?hosted\_button\_id=58HLSJN778Z4W)
+\[!\[Donate via PayPal](https://www.paypal.com/donate/?hosted\_button\_id=58HLSJN778Z4W)
 
 
 
