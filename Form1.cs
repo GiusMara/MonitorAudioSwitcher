@@ -14,13 +14,19 @@ using System.Diagnostics;
 
 namespace MonitorAudioSwitcher
 {
+    /// <summary>
+    /// Core logic for monitoring window focus and switching audio endpoints.
+    /// Uses Win32 P/Invoke for window tracking and CoreAudio for device routing.
+    /// </summary>
     public partial class Form1 : Form
     {
+        // Maps a unique monitor string (Name + Bounds) to an Audio Device name
         private Dictionary<string, string> monitorToDevice = new Dictionary<string, string>();
         private List<string> audioDevices = new List<string>();
         private Dictionary<string, ComboBox> combos = new Dictionary<string, ComboBox>();
 
         private readonly string configPath;
+        // Hardcoded path for the development environment icon
         private readonly string iconPath = @"C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\MonitorAudioSwitcher.ico";
         private NotifyIcon trayIcon = null!;
 
@@ -28,25 +34,29 @@ namespace MonitorAudioSwitcher
         {
             InitializeComponent();
 
-            // Percorso config in AppData
+            // Initialize configuration path in AppData/Roaming to ensure write permissions
             string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MonitorAudioSwitcher");
             configPath = Path.Combine(folder, "config.json");
             Directory.CreateDirectory(folder);
 
             SetupTray();
             
-            // Check autostart esistente
+            // Sync UI checkbox with Windows Registry "Run" key status
             chkAutoStart.Checked = IsAutoStartEnabled();
             chkAutoStart.CheckedChanged += (s, e) => SetAutoStart(chkAutoStart.Checked);
 
+            // Populate hardware-specific data
             LoadMonitors();
             LoadAudioDevices();
-            LoadConfig(); // Carica prima di costruire la UI
+            LoadConfig(); 
             BuildDropdowns();
 
             startButton.Click += StartButton_Click;
         }
 
+        /// <summary>
+        /// Configures the System Tray icon and context menu for background operation.
+        /// </summary>
         private void SetupTray()
         {
             var trayMenu = new ContextMenuStrip();
@@ -63,14 +73,18 @@ namespace MonitorAudioSwitcher
             if (File.Exists(iconPath))
                 trayIcon.Icon = new Icon(iconPath);
             else
-                trayIcon.Icon = SystemIcons.Application;
+                trayIcon.Icon = SystemIcons.Application; // Fallback to system icon if path is invalid
         }
 
+        /// <summary>
+        /// Scans all active screens and creates a unique key using DeviceName and Resolution/Coordinates.
+        /// </summary>
         private void LoadMonitors()
         {
             monitorToDevice.Clear();
             foreach (var screen in Screen.AllScreens)
             {
+                // Key format: "MonitorName: Left,Top -> Right,Bottom" to uniquely identify displays in multi-head setups
                 string key = $"{GetMonitorName(screen)}: {screen.Bounds.Left},{screen.Bounds.Top} -> {screen.Bounds.Right},{screen.Bounds.Bottom}";
                 monitorToDevice[key] = "";
             }
@@ -95,10 +109,13 @@ namespace MonitorAudioSwitcher
                             if (monitorToDevice.ContainsKey(kv.Key)) monitorToDevice[kv.Key] = kv.Value;
                     }
                 }
-                catch { }
+                catch { /* Ignore corrupted config files */ }
             }
         }
 
+        /// <summary>
+        /// Dynamically populates the FlowLayoutPanel with labels and dropdowns for each detected monitor.
+        /// </summary>
         private void BuildDropdowns()
         {
             flowLayoutPanel1.Controls.Clear();
@@ -108,7 +125,7 @@ namespace MonitorAudioSwitcher
                 var combo = new ComboBox { Width = 200, DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(5) };
                 combo.Items.AddRange(audioDevices.ToArray());
 
-                // Applica selezione salvata
+                // Restore previous mapping if available
                 if (monitorToDevice.TryGetValue(monitor, out string savedDevice) && combo.Items.Contains(savedDevice))
                     combo.SelectedItem = savedDevice;
                 else if (combo.Items.Count > 0) 
@@ -122,21 +139,26 @@ namespace MonitorAudioSwitcher
 
         private void StartButton_Click(object? sender, EventArgs e)
         {
+            // Update mapping dictionary from UI selections
             foreach (var kv in combos)
             {
                 monitorToDevice[kv.Key] = kv.Value.SelectedItem?.ToString() ?? "";
             }
 
-            // Salva JSON
             File.WriteAllText(configPath, JsonSerializer.Serialize(monitorToDevice));
 
-            this.Hide();
+            this.Hide(); // Minimize to Tray
 
+            // Spawn the observer thread. Using a Background thread ensures it closes when the main app exits.
             var thread = new Thread(() => MonitorAudioLoop(new Dictionary<string, string>(monitorToDevice)));
             thread.IsBackground = true;
             thread.Start();
         }
 
+        /// <summary>
+        /// Background loop that monitors the Active Window and switches audio if it moves to a different monitor.
+        /// </summary>
+        /// <param name="mapping">Thread-safe copy of the monitor-to-audio device mapping.</param>
         private void MonitorAudioLoop(Dictionary<string, string> mapping)
         {
             IntPtr lastMonitor = IntPtr.Zero;
@@ -145,20 +167,25 @@ namespace MonitorAudioSwitcher
 
             while (true)
             {
+                // Get the handle of the window currently receiving user input
                 IntPtr hwnd = GetForegroundWindow();
                 if (hwnd != IntPtr.Zero)
                 {
-                    IntPtr monitor = MonitorFromWindow(hwnd, 2); // MONITOR_DEFAULTTONEAREST
+                    // Identify which physical monitor the foreground window is predominantly on
+                    // 2 = MONITOR_DEFAULTTONEAREST: Ensures a result even if the window is between screens
+                    IntPtr monitor = MonitorFromWindow(hwnd, 2); 
 
                     if (monitor != lastMonitor)
                     {
                         var mi = new MONITORINFO { cbSize = (uint)Marshal.SizeOf(typeof(MONITORINFO)) };
                         if (GetMonitorInfo(monitor, ref mi))
                         {
+                            // Reconstruct the key to match the saved dictionary
                             string monitorKey = $"{GetMonitorNameFromRect(mi.rcMonitor)}: {mi.rcMonitor.Left},{mi.rcMonitor.Top} -> {mi.rcMonitor.Right},{mi.rcMonitor.Bottom}";
 
                             if (mapping.TryGetValue(monitorKey, out string targetDevice))
                             {
+                                // Only trigger a switch if the target device is different from the current one to prevent overhead
                                 if (!string.IsNullOrEmpty(targetDevice) && targetDevice != lastAudio)
                                 {
                                     var dev = controller.GetPlaybackDevices().FirstOrDefault(d => d.Name == targetDevice);
@@ -169,7 +196,7 @@ namespace MonitorAudioSwitcher
                                             dev.SetAsDefault();
                                             lastAudio = targetDevice;
                                         }
-                                        catch { }
+                                        catch { /* Handle potential device disconnection during switch */ }
                                     }
                                 }
                             }
@@ -177,11 +204,12 @@ namespace MonitorAudioSwitcher
                         }
                     }
                 }
+                // Throttling the loop to ~2Hz to balance responsiveness and CPU usage (battery friendly)
                 Thread.Sleep(500);
             }
         }
 
-        // --- Helper per Autostart ---
+        // --- Autostart Helpers (Registry Interop) ---
         private bool IsAutoStartEnabled()
         {
             using var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", false);
@@ -195,7 +223,12 @@ namespace MonitorAudioSwitcher
             else key?.DeleteValue("MonitorAudioSwitcher", false);
         }
 
-        // --- Gestione Nomi Monitor ---
+        // --- Monitor Metadata Management ---
+        
+        /// <summary>
+        /// Attempts to retrieve the User-Friendly Monitor Name (EDID UserFriendlyName) via WMI.
+        /// Falls back to DeviceName (e.g., \\.\DISPLAY1) if WMI fails.
+        /// </summary>
         private string GetMonitorName(Screen screen)
         {
             try
@@ -204,6 +237,7 @@ namespace MonitorAudioSwitcher
                 foreach (ManagementObject queryObj in searcher.Get())
                 {
                     string instance = queryObj["InstanceName"]?.ToString() ?? "";
+                    // Cross-reference WMI instance with WinForms Screen DeviceName
                     if (instance.Contains(screen.DeviceName.Replace("\\", "\\\\")))
                     {
                         var nameChars = (ushort[])queryObj["UserFriendlyName"];
@@ -215,6 +249,10 @@ namespace MonitorAudioSwitcher
             return screen.DeviceName;
         }
 
+        /// <summary>
+        /// Matches a Win32 RECT (monitor coordinates) back to a Friendly Name.
+        /// Used for identifying the monitor during the background loop.
+        /// </summary>
         private string GetMonitorNameFromRect(RECT rect)
         {
             foreach (var screen in Screen.AllScreens)
@@ -225,8 +263,10 @@ namespace MonitorAudioSwitcher
             return "Unknown Monitor";
         }
 
+        // --- Win32 API Definitions (User32.dll) ---
         [StructLayout(LayoutKind.Sequential)] struct RECT { public int Left, Top, Right, Bottom; }
         [StructLayout(LayoutKind.Sequential)] struct MONITORINFO { public uint cbSize; public RECT rcMonitor; public RECT rcWork; public uint dwFlags; }
+        
         [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")] static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
         [DllImport("user32.dll", CharSet = CharSet.Auto)] static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "T+5Xr4UCUsY=",
+  "dgSpecHash": "40Vcfr2dWe0=",
   "success": true,
   "projectFilePath": "C:\\Users\\GiUs_\\MonitorAudioSwitcher\\MonitorAudioSwitcher\\MonitorAudioSwitcher.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\GiUs_\\.nuget\\packages\\audioswitcher.audioapi\\3.0.0\\audioswitcher.audioapi.3.0.0.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\audioswitcher.audioapi.coreaudio\\3.0.3\\audioswitcher.audioapi.coreaudio.3.0.3.nupkg.sha512",
+    "C:\\Users\\GiUs_\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.3\\microsoft.net.illink.tasks.10.0.3.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio\\2.2.1\\naudio.2.2.1.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio.asio\\2.2.1\\naudio.asio.2.2.1.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio.core\\2.2.1\\naudio.core.2.2.1.nupkg.sha512",
@@ -13,7 +14,10 @@
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio.wasapi\\2.2.1\\naudio.wasapi.2.2.1.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio.winforms\\2.2.1\\naudio.winforms.2.2.1.nupkg.sha512",
     "C:\\Users\\GiUs_\\.nuget\\packages\\naudio.winmm\\2.2.1\\naudio.winmm.2.2.1.nupkg.sha512",
-    "C:\\Users\\GiUs_\\.nuget\\packages\\system.management\\10.0.3\\system.management.10.0.3.nupkg.sha512"
+    "C:\\Users\\GiUs_\\.nuget\\packages\\system.management\\10.0.3\\system.management.10.0.3.nupkg.sha512",
+    "C:\\Users\\GiUs_\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.3\\microsoft.netcore.app.runtime.win-x64.10.0.3.nupkg.sha512",
+    "C:\\Users\\GiUs_\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.3\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.3.nupkg.sha512",
+    "C:\\Users\\GiUs_\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.3\\microsoft.aspnetcore.app.runtime.win-x64.10.0.3.nupkg.sha512"
   ],
   "logs": [
     {

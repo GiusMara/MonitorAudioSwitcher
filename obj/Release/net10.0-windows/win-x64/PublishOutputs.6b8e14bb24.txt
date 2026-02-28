@@ -1,12 +1,2 @@
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.exe
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.deps.json
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.runtimeconfig.json
 C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.pdb
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.Asio.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.Core.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.Midi.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.Wasapi.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.WinForms.dll
-C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\NAudio.WinMM.dll
+C:\Users\GiUs_\MonitorAudioSwitcher\MonitorAudioSwitcher\bin\Release\net10.0-windows\win-x64\publish\MonitorAudioSwitcher.exe

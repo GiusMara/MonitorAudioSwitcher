@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MonitorAudioSwitcher")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+654ffdeda58f788efa5b555dd6327dc91eaa702e")]
 [assembly: System.Reflection.AssemblyProductAttribute("MonitorAudioSwitcher")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MonitorAudioSwitcher")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
